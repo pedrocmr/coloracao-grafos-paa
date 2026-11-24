@@ -1,11 +1,60 @@
 """Testes de correção, incluindo comparação com força bruta independente."""
 import itertools
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 
-from coloracao import backtracking, criar_grafo, exemplos, guloso, validar_coloracao
+from coloracao import backtracking, criar_grafo, exemplos, guloso, ler_entrada, validar_coloracao
 
 
 class TestColoracao(unittest.TestCase):
+    def executar_cli(self, *argumentos):
+        return subprocess.run(
+            [sys.executable, '-X', 'utf8', str(Path(__file__).with_name('coloracao.py')), *argumentos],
+            capture_output=True, text=True, encoding='utf-8', check=False,
+        )
+
+    def test_relatorio_exportado_e_resultados_do_artigo(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            saida = Path(pasta) / 'resultados.txt'
+            processo = self.executar_cli('--sem-tempos', '--saida', str(saida))
+            self.assertEqual(processo.returncode, 0, processo.stderr)
+            self.assertEqual(saida.read_text(encoding='utf-8'), processo.stdout)
+            self.assertNotIn('Tempo guloso:', processo.stdout)
+            for contadores in ('6/0/4', '6/0/5', '48/15/16', '13/0/8', '26/3/12'):
+                self.assertIn(contadores, processo.stdout)
+            self.assertIn('DECISÃO EXATA: NÃO', processo.stdout)
+
+    def test_coroa_com_ordem_alternativa_pela_cli(self):
+        processo = self.executar_cli('--exemplo', 'coroa', '--sem-tempos', '--ordem',
+                                    '0', '2', '4', '6', '1', '3', '5', '7')
+        self.assertEqual(processo.returncode, 0, processo.stderr)
+        self.assertIn('Guloso: [0, 1, 0, 1, 0, 1, 0, 1] | 2 cores', processo.stdout)
+        self.assertNotIn('=== Triângulo ===', processo.stdout)
+
+    def test_json_e_erros_de_entrada(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            entrada = Path(pasta) / 'entrada.json'
+            entrada.write_text(json.dumps({'vertices': 3, 'arestas': [[0, 1], [1, 2], [0, 2]]}), encoding='utf-8')
+            processo = self.executar_cli('--arquivo', str(entrada), '--sem-tempos')
+            self.assertEqual(processo.returncode, 0, processo.stderr)
+            self.assertIn('Guloso: [0, 1, 2] | 3 cores', processo.stdout)
+            for dados in ({}, [], {'vertices': 3, 'arestas': [[0]]},
+                          {'vertices': 3, 'arestas': [], 'ordem': 42},
+                          {'vertices': 3, 'arestas': [[0, 3]]}):
+                entrada.write_text(json.dumps(dados), encoding='utf-8')
+                with self.assertRaises(ValueError):
+                    ler_entrada(entrada)
+            processo = self.executar_cli('--arquivo', str(entrada))
+            self.assertEqual(processo.returncode, 2)
+            self.assertNotIn('Traceback', processo.stderr)
+            self.assertIn('error:', processo.stderr)
+        processo = self.executar_cli('--ordem', '0', '1')
+        self.assertEqual(processo.returncode, 2)
+
     def test_todos_grafos_ate_quatro_vertices(self):
         for n in range(5):
             possiveis = list(itertools.combinations(range(n), 2))

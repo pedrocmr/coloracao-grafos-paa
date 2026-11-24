@@ -1,0 +1,125 @@
+3-COLORAÇÃO DE GRAFOS | GULOSO E BACKTRACKING
+Cada posição da lista de cores corresponde ao vértice de mesmo índice.
+
+=== Triângulo ===
+ENTRADA
+Vértices: 3 | Arestas: 3
+Arestas: [(0, 1), (0, 2), (1, 2)]
+Ordem: [0, 1, 2]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 1, 2] | 3 cores
+Conclusão do guloso: encontrou uma 3-coloração.
+Backtracking: [0, 1, 2] | 3 cores nesta solução
+
+Vértice | Guloso | Backtracking
+      0 |      0 |            0
+      1 |      1 |            1
+      2 |      2 |            2
+Verificação do guloso: válida (sem conflito nas arestas).
+Verificação do backtracking: válida e usa no máximo 3 cores.
+Busca: 6 tentativas | 0 desfazimentos | 4 chamadas
+DECISÃO EXATA: SIM, o grafo é 3-colorível.
+
+=== Ciclo de quatro vértices ===
+ENTRADA
+Vértices: 4 | Arestas: 4
+Arestas: [(0, 1), (0, 3), (1, 2), (2, 3)]
+Ordem: [0, 1, 2, 3]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 1, 0, 1] | 2 cores
+Conclusão do guloso: encontrou uma 3-coloração.
+Backtracking: [0, 1, 0, 1] | 2 cores nesta solução
+
+Vértice | Guloso | Backtracking
+      0 |      0 |            0
+      1 |      1 |            1
+      2 |      0 |            0
+      3 |      1 |            1
+Verificação do guloso: válida (sem conflito nas arestas).
+Verificação do backtracking: válida e usa no máximo 3 cores.
+Busca: 6 tentativas | 0 desfazimentos | 5 chamadas
+DECISÃO EXATA: SIM, o grafo é 3-colorível.
+
+=== Completo K4 ===
+ENTRADA
+Vértices: 4 | Arestas: 6
+Arestas: [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
+Ordem: [0, 1, 2, 3]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 1, 2, 3] | 4 cores
+Conclusão do guloso: inconclusivo para 3-coloração.
+Backtracking: não existe coloração com até três cores.
+
+Vértice | Guloso | Backtracking
+      0 |      0 |           --
+      1 |      1 |           --
+      2 |      2 |           --
+      3 |      3 |           --
+Verificação do guloso: válida (sem conflito nas arestas).
+Busca: 48 tentativas | 15 desfazimentos | 16 chamadas
+DECISÃO EXATA: NÃO, o grafo não é 3-colorível.
+
+=== Exemplo C da referência ===
+ENTRADA
+Vértices: 7 | Arestas: 6
+Arestas: [(0, 3), (1, 5), (1, 6), (2, 4), (3, 5), (4, 6)]
+Ordem: [0, 1, 2, 3, 4, 5, 6]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 0, 0, 1, 1, 2, 2] | 3 cores
+Conclusão do guloso: encontrou uma 3-coloração.
+Backtracking: [0, 0, 0, 1, 1, 2, 2] | 3 cores nesta solução
+
+Vértice | Guloso | Backtracking
+      0 |      0 |            0
+      1 |      0 |            0
+      2 |      0 |            0
+      3 |      1 |            1
+      4 |      1 |            1
+      5 |      2 |            2
+      6 |      2 |            2
+Verificação do guloso: válida (sem conflito nas arestas).
+Verificação do backtracking: válida e usa no máximo 3 cores.
+Busca: 13 tentativas | 0 desfazimentos | 8 chamadas
+DECISÃO EXATA: SIM, o grafo é 3-colorível.
+
+=== Coroa com oito vértices ===
+ENTRADA
+Vértices: 8 | Arestas: 12
+Arestas: [(0, 3), (0, 5), (0, 7), (1, 2), (1, 4), (1, 6), (2, 5), (2, 7), (3, 4), (3, 6), (4, 7), (5, 6)]
+Ordem: [0, 1, 2, 3, 4, 5, 6, 7]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 0, 1, 1, 2, 2, 3, 3] | 4 cores
+Conclusão do guloso: inconclusivo para 3-coloração.
+Backtracking: [0, 0, 1, 2, 1, 2, 1, 2] | 3 cores nesta solução
+
+Vértice | Guloso | Backtracking
+      0 |      0 |            0
+      1 |      0 |            0
+      2 |      1 |            1
+      3 |      1 |            2
+      4 |      2 |            1
+      5 |      2 |            2
+      6 |      3 |            1
+      7 |      3 |            2
+Verificação do guloso: válida (sem conflito nas arestas).
+Verificação do backtracking: válida e usa no máximo 3 cores.
+Busca: 26 tentativas | 3 desfazimentos | 12 chamadas
+DECISÃO EXATA: SIM, o grafo é 3-colorível.
+
+RESUMO DOS CINCO CASOS DO ARTIGO
+Grafo                        | Guloso | 3-colorível | Tent./Desf./Cham.
+Triângulo                    |      3 | SIM         | 6/0/4
+Ciclo de quatro vértices     |      2 | SIM         | 6/0/5
+Completo K4                  |      4 | NÃO         | 48/15/16
+Exemplo C da referência      |      3 | SIM         | 13/0/8
+Coroa com oito vértices      |      4 | SIM         | 26/3/12

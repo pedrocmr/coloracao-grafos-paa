@@ -1,0 +1,28 @@
+3-COLORAÇÃO DE GRAFOS | GULOSO E BACKTRACKING
+Cada posição da lista de cores corresponde ao vértice de mesmo índice.
+
+=== Coroa com oito vértices ===
+ENTRADA
+Vértices: 8 | Arestas: 12
+Arestas: [(0, 3), (0, 5), (0, 7), (1, 2), (1, 4), (1, 6), (2, 5), (2, 7), (3, 4), (3, 6), (4, 7), (5, 6)]
+Ordem: [0, 2, 4, 6, 1, 3, 5, 7]
+Limite do backtracking: 3 cores (0, 1 e 2)
+
+SAÍDA
+Guloso: [0, 1, 0, 1, 0, 1, 0, 1] | 2 cores
+Conclusão do guloso: encontrou uma 3-coloração.
+Backtracking: [0, 1, 0, 1, 0, 1, 0, 1] | 2 cores nesta solução
+
+Vértice | Guloso | Backtracking
+      0 |      0 |            0
+      1 |      1 |            1
+      2 |      0 |            0
+      3 |      1 |            1
+      4 |      0 |            0
+      5 |      1 |            1
+      6 |      0 |            0
+      7 |      1 |            1
+Verificação do guloso: válida (sem conflito nas arestas).
+Verificação do backtracking: válida e usa no máximo 3 cores.
+Busca: 12 tentativas | 0 desfazimentos | 9 chamadas
+DECISÃO EXATA: SIM, o grafo é 3-colorível.
